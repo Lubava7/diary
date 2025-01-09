@@ -1,0 +1,26 @@
+dialog {
+  width: 100%;
+  max-width: 1024px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+#camera {
+  /* border: 2px solid red; */
+  flex-direction: column;
+}
+
+#camera video {
+  /* border: 2px solid black; */
+}
+
+#take_photo_btn {
+  /* border: 2px solid purple; */
+}
+
+#camera canvas {
+  /* border: 2px solid green; */
+}
