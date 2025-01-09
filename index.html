@@ -8,114 +8,158 @@
     <title></title>
   </head>
   <body>
-    <marquee>
-      Stay focused &#x2022; Держись Любавка! &#x2022; Все получится! &#x2022;
-      Осталось немного &#x2022;
-    </marquee>
-    <button id="add_record">Add new record</button>
-
-    <dialog id="modal">
-      <b id="dialog_title">
-        <!-- title with name here -->
-      </b>
-      <form method="dialog">
-        <label for="kcal_amount">Кол-во каллорий за сегодня:</label>
-        <input type="text" id="kcal_amount" name="kcal_amount" required />
-
-        <label for="diet_failure">Были ли сегодня срывы?</label>
-        <div>
-          <input type="radio" id="check_yes" name="diet_failure" required />
-          <label for="check_yes">Да </label>
-        </div>
-        <div>
-          <input type="radio" id="check_no" name="diet_failure" required />
-          <label for="check_no">Нет </label>
-        </div>
-
-        <label for="description"
-          >Как прошел день? Какие моменты показались тяжелыми сегодня?</label
-        >
-        <textarea
-          id="description"
-          name="description"
-          required
-          rows="5"
-          maxlength="1024"
-        ></textarea>
-        <small>максимальное колво символов - 1024</small>
-
-        <label for="gym_day">Была сегодня в зале?</label>
-        <div>
-          <input type="radio" id="check_yes" name="gym_day" required />
-          <label for="check_yes">Да </label>
-        </div>
-        <div>
-          <input type="radio" id="check_no" name="gym_day" required />
-          <label for="check_no">Нет </label>
-        </div>
-
-        <label for="workout_check">Весь воркаут был выполнен?</label>
-        <div>
-          <input type="radio" id="check_yes" name="workout_check" required />
-          <label for="check_yes">Да </label>
-        </div>
-        <div>
-          <input type="radio" id="check_no" name="workout_check" required />
-          <label for="check_no">Нет </label>
-        </div>
-
-        <input
-          type="button"
-          required
-          id="add_photo_btn"
-          value="Добавить фото"
-        />
-        <!-- photo capture with canvas -->
-        <!-- <div id="camera">
-          <video id="video">Видео пока что недоступно.</video>
-          <button id="take_photo_btn">Сделать фото</button>
-
-          <canvas id="canvas"></canvas>
-          <button id="close_photo_btn">Закрыть</button>
-        </div> -->
-
-        <!-- camera roll access and photo selection -->
-        <div id="camera">
-          <label for="cameraInput"
-            >Добавь фото, которое подходит под настроение сегодняшнего
-            дня:</label
-          >
-          <input
-            type="file"
-            id="cameraInput"
-            accept="image/*"
-            capture="environment"
-          />
-          <button id="close_photo_btn">Закрыть</button>
-          <h2>Твое фото:</h2>
-          <img
-            id="preview"
-            alt="Selected image will appear here"
-            style="max-width: 100%; height: auto"
-          />
-        </div>
-
-        <!-- confirmation buttons -->
-        <div>
-          <button id="close_btn">Cancel</button>
-          <button id="confirm_btn">OK</button>
-        </div>
+    <!-- login FOR ME ONLY -->
+    <div id="login_container">
+      <h2>Вход</h2>
+      <form id="login_form">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" required />
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" required />
+        <button type="button" id="login_btn">Войти</button>
+        <p id="error_msg" style="color: red; display: none">
+          Неверное имя или пароль!
+        </p>
       </form>
+    </div>
 
-      <p>Не забудь поговорить с клодом о сегодняшних успехах!</p>
-    </dialog>
+    <div id="app_container" style="display: none">
+      <div class="header_buttons">
+        <button id="start_challenge_btn">НАЧАТЬ!</button>
+        <button id="logout_btn">Выйти из системы</button>
+      </div>
 
-    <ul id="list">
-      <!-- list of days here -->
-    </ul>
-    <marquee>
-      Не забывай считать каллории &#x2022; Все супер! &#x2022; Хорошей
-      тренировки! &#x2022; Не забывай делать замеры! &#x2022;
-    </marquee>
+      <div class="scrolling_text">
+        <div class="running_text">
+          Stay focused &#x2022; Держись Любавка! &#x2022; Все получится!
+          &#x2022; Осталось немного &#x2022; Good job! &#x2022; Не забывай
+          считать калории &#x2022; Все супер! &#x2022; Хорошей тренировки!
+          &#x2022; Не забывай делать замеры! &#x2022;
+        </div>
+      </div>
+
+      <button id="add_record">Добавить день</button>
+
+      <dialog id="modal">
+        <h2 id="dialog_title">
+          <!-- title with name here -->
+        </h2>
+        <form method="dialog">
+          <div class="input_box">
+            <img src="/img/kcal.svg" alt="img1" />
+            <label for="kcal_amount">Кол-во калорий за сегодня:</label>
+            <input type="text" id="kcal_amount" name="kcal_amount" required />
+          </div>
+
+          <div class="input_box">
+            <img src="/img/sad.svg" alt="img2" />
+            <label for="diet_failure">Были ли сегодня срывы?</label>
+            <div>
+              <input type="radio" id="check_yes" name="diet_failure" required />
+              <label for="check_yes">Да </label>
+            </div>
+            <div>
+              <input type="radio" id="check_no" name="diet_failure" required />
+              <label for="check_no">Нет </label>
+            </div>
+          </div>
+
+          <div class="input_box">
+            <img src="/img/gym.svg" alt="img3" />
+            <label for="gym_day">Была сегодня в зале?</label>
+            <div>
+              <input type="radio" id="check_yes" name="gym_day" required />
+              <label for="check_yes">Да </label>
+            </div>
+            <div>
+              <input type="radio" id="check_no" name="gym_day" required />
+              <label for="check_no">Нет </label>
+            </div>
+          </div>
+
+          <div class="input_box">
+            <img src="/img/workout.svg" alt="img4" />
+            <label for="workout_check">Весь воркаут был выполнен?</label>
+            <div>
+              <input
+                type="radio"
+                id="check_yes"
+                name="workout_check"
+                required
+              />
+              <label for="check_yes">Да </label>
+            </div>
+            <div>
+              <input type="radio" id="check_no" name="workout_check" required />
+              <label for="check_no">Нет </label>
+            </div>
+          </div>
+
+          <div class="input_box">
+            <img src="/img/description.svg" alt="img5" />
+            <div id="description_box">
+              <label for="description"
+                >Как прошел день? Какие моменты показались тяжелыми
+                сегодня?</label
+              >
+              <input
+                type="text"
+                id="description"
+                name="description"
+                required
+                maxlength="150"
+              />
+              <small>максимальное колво символов - 150</small>
+            </div>
+          </div>
+
+          <input
+            type="button"
+            required
+            id="add_photo_btn"
+            value="Добавить фото"
+          />
+
+          <!-- camera roll access and photo selection -->
+          <div id="camera">
+            <img src="/img/camera.svg" alt="img6" />
+            <label for="cameraInput"
+              >Добавь фото, которое подходит под настроение сегодняшнего
+              дня:</label
+            >
+            <input
+              type="file"
+              id="cameraInput"
+              accept="image/*"
+              capture="environment"
+            />
+            <button id="close_photo_btn">Закрыть окно добавления фото</button>
+
+            <img id="preview" alt="выбранное фото будет тут" />
+          </div>
+
+          <!-- confirmation buttons -->
+          <div>
+            <button id="close_btn">Cancel</button>
+            <button id="confirm_btn">OK</button>
+          </div>
+        </form>
+
+        <p>Не забудь поговорить с клодом о сегодняшних успехах!</p>
+      </dialog>
+
+      <ul id="list">
+        <!-- list of days here -->
+      </ul>
+
+      <div class="scrolling_text">
+        <div class="running_text">
+          Не забывай считать калории &#x2022; Все супер! &#x2022; Хорошей
+          тренировки! &#x2022; Не забывай делать замеры! &#x2022; Stay focused
+          &#x2022; Держись Любавка! &#x2022; Все получится! &#x2022; Осталось
+          немного &#x2022; Good job! &#x2022;
+        </div>
+      </div>
+    </div>
   </body>
 </html>
