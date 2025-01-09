@@ -60,34 +60,113 @@ const handleLogout = () => {
 window.addEventListener('load', checkLoginStatus);
 
 // start challenge button - to start count down
+const start_challenge_dialog = document.getElementById('start_challenge_modal');
 const start_challenge_btn = document.getElementById('start_challenge_btn');
+const confirm_challenge_btn = document.getElementById('confirm_challenge_btn');
+const close_challenge_btn = document.getElementById('close_challenge_btn');
+const info_article = document.getElementById('info_article');
 
-start_challenge_btn.addEventListener('click', () => {
-  const startDate = new Date().toLocaleDateString();
-  localStorage.setItem('challengeStartDate', startDate);
-
-  updateDayCount();
-});
+info_article.style.display = 'none';
 
 let dayCount;
-document.title = `День ${dayCount}`;
+const startDateStr = localStorage.getItem('challengeStartDate');
+if (!startDateStr) {
+  document.title = 'Начни свой путь!';
+}
 
 const updateDayCount = () => {
   const startDateStr = localStorage.getItem('challengeStartDate');
+
   if (startDateStr) {
     const startDate = new Date(startDateStr);
     const currentDate = new Date();
 
-    dayCount = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24));
+    startDate.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0);
+
+    const dayCount =
+      Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
     document.title = `День ${dayCount}`;
+
     const dayCountElement = document.getElementById('day_count');
     if (dayCountElement) {
-      dayCountElement.textContent = `Day ${dayCount}`;
+      dayCountElement.textContent = `День ${dayCount}`;
     }
+
+    info_article.style.display = 'block';
+  } else {
+    document.title = 'Начни свой путь!';
+    info_article.style.display = 'none';
   }
 };
-window.addEventListener('load', updateDayCount);
+
+const startCountdown = () => {
+  const startDateStr = localStorage.getItem('challengeStartDate');
+  if (!startDateStr) return;
+
+  if (startDateStr) {
+    start_challenge_btn.style.display = 'none';
+  }
+
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 56); // 8 weeks * 7 days = 56 days
+
+  const countdownElement = document.getElementById('countdown');
+
+  const updateCountdown = () => {
+    const now = new Date();
+    const timeLeft = endDate - now;
+
+    if (timeLeft <= 0) {
+      countdownElement.textContent = 'Курс завершен!';
+      return;
+    }
+
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(days / 7);
+    const remainingDays = days % 7;
+    const hours = Math.floor(
+      (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    countdownElement.textContent = `${weeks} недель ${remainingDays} дней ${hours} часов ${minutes} минут ${seconds} секунд`;
+  };
+
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  window.addEventListener('unload', () => clearInterval(interval));
+};
+
+start_challenge_btn.addEventListener('click', () => {
+  start_challenge_dialog.showModal();
+});
+
+close_challenge_btn.addEventListener('click', () => {
+  start_challenge_dialog.close();
+});
+
+confirm_challenge_btn.addEventListener('click', () => {
+  const startDate = new Date();
+  startDate.setHours(0, 0, 0, 0);
+  localStorage.setItem('challengeStartDate', startDate.toISOString());
+
+  info_article.style.display = 'block';
+  start_challenge_btn.style.display = 'none';
+
+  updateDayCount();
+  startCountdown();
+  start_challenge_dialog.close();
+});
+
+window.addEventListener('load', () => {
+  updateDayCount();
+  startCountdown();
+});
 
 // input data
 const jorney_duration = '8 weeks';
@@ -116,24 +195,10 @@ add_record_btn.addEventListener('click', (e) => {
 
 close_btn.addEventListener('click', (e) => {
   dialog.close();
-  document.getElementById('camera').style.display = 'none';
 });
 
 confirm_btn.addEventListener('click', (e) => {
   dialog.close();
-});
-
-document.getElementById('camera').style.display = 'none';
-
-const add_photo_btn = document.getElementById('add_photo_btn');
-add_photo_btn.addEventListener('click', (e) => {
-  document.getElementById('camera').style.display = 'block';
-  startup();
-});
-
-const close_photo_btn = document.getElementById('close_photo_btn');
-close_photo_btn.addEventListener('click', (e) => {
-  document.getElementById('camera').style.display = 'none';
 });
 
 const cameraInput = document.getElementById('cameraInput');
@@ -265,7 +330,6 @@ confirm_btn.addEventListener('click', (e) => {
 
       dialog.close();
       document.querySelector('form').reset();
-      document.getElementById('camera').style.display = 'none';
     };
     reader.readAsDataURL(file);
   } else {
@@ -284,7 +348,6 @@ confirm_btn.addEventListener('click', (e) => {
 
     dialog.close();
     document.querySelector('form').reset();
-    document.getElementById('camera').style.display = 'none';
   }
 });
 

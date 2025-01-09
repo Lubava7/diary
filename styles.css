@@ -25,6 +25,21 @@ body {
   text-align: center;
 }
 
+#info_article {
+  margin: 10px;
+  border-radius: 8px;
+  transition: opacity 0.2s ease-out;
+  border: 2px dotted red;
+}
+
+#countdown {
+  color: white;
+  background-color: #ff8922;
+  border-radius: 8px;
+  padding: 0.5em;
+  font-size: 2.5rem;
+}
+
 .header_buttons {
   display: flex;
   flex-direction: row;
@@ -49,6 +64,11 @@ form {
   flex-direction: column;
 }
 
+.camera_box {
+  display: flex;
+  flex-direction: column;
+}
+
 dialog input {
   border: 1px solid #e5e5e5;
   background-color: transparent;
@@ -65,7 +85,8 @@ input:hover {
   outline: none;
 }
 
-.input_box {
+.input_box,
+#camera {
   padding: 0.5em;
   margin: 10px 0;
   color: #b9b9b9;
@@ -78,7 +99,7 @@ input:hover {
 
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 
@@ -94,25 +115,9 @@ input:hover {
   border: 1px solid #ff8922;
 }
 
-.input_box img {
+.input_box img,
+#camera img {
   margin: 5px 10px 5px 5px;
-}
-
-#camera {
-  padding: 0.5em;
-  margin: 10px 0;
-  color: #b9b9b9;
-  border-radius: 3px;
-  border: 1px solid #e5e5e5;
-  box-shadow: #32325d40 0px 10px 30px -12px inset,
-    #0000004d 0px 18px 36px -18px inset;
-  transition: 0.35s ease-in-out;
-  transition: all 0.35s ease-in-out;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
 }
 
 #preview {
@@ -121,31 +126,34 @@ input:hover {
   height: 100%;
 }
 
-ul {
+#list {
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-ul li {
+#list li {
   list-style: none;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 8px;
   width: 90%;
   max-width: 400px;
   height: 400px;
-  margin: 20px 0;
+  margin: 20px;
   overflow: hidden;
   cursor: pointer;
   position: relative;
 }
 
-ul li p,
+#list li p,
 h2,
 h3 {
   padding: 0;
   margin: 0;
 }
 
-ul li img {
+#list li img {
   position: absolute;
   object-fit: cover;
   width: 100%;
@@ -156,7 +164,7 @@ ul li img {
   transition: opacity 0.2s ease-out;
 }
 
-ul li h2 {
+#list li h2 {
   position: absolute;
   inset: auto auto 30px 30px;
   margin: 0;
@@ -166,7 +174,7 @@ ul li h2 {
   text-transform: uppercase;
 }
 
-ul li p {
+#list li p {
   position: absolute;
   opacity: 0;
   width: 100%;
@@ -175,18 +183,18 @@ ul li p {
   padding: 0 0 0 5px;
 }
 
-ul li:hover h2 {
+#list li:hover h2 {
   inset: auto auto 220px 30px;
   transition: inset 0.3s ease-out;
 }
 
-ul li:hover p {
+#list li:hover p {
   opacity: 1;
   transition: opacity 0.5s 0.1s ease-in;
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-ul li:hover img {
+#list li:hover img {
   transition: opacity 0.3s ease-in;
   opacity: 1;
 }
@@ -199,6 +207,7 @@ ul li:hover img {
   padding: 5px 0;
   display: flex;
   width: 100%;
+  overflow: hidden;
 }
 
 .running_text {
@@ -214,6 +223,33 @@ ul li:hover img {
   100% {
     transform: translateX(-100%);
   }
+}
+
+#close_btn,
+#close_challenge_btn {
+  background-color: #7a7a7a;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 500;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin: 20px 10px;
+  outline: none;
+  padding: 10px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
 button,
@@ -259,7 +295,8 @@ button:focus {
     width: 100%;
     left: 0%;
   }
-  ul li {
+  #list li {
     width: 100%;
+    margin: 20px 0;
   }
 }

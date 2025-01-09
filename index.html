@@ -26,7 +26,7 @@
     <div id="app_container" style="display: none">
       <div class="header_buttons">
         <button id="start_challenge_btn">НАЧАТЬ!</button>
-        <button id="logout_btn">Выйти из системы</button>
+        <button id="logout_btn">Выйти</button>
       </div>
 
       <div class="scrolling_text">
@@ -37,6 +37,45 @@
           &#x2022; Не забывай делать замеры! &#x2022;
         </div>
       </div>
+
+      <dialog id="start_challenge_modal">
+        <h2>После подтверждения начнется 8-недельный курс похудения</h2>
+        <ul>
+          <b>В течение курса необходимо:</b>
+          <li>Заполнять дневник записей</li>
+          <li>Общаться с Claude'ом о своих успехах</li>
+          <li>Посещать спортзал без пропусков</li>
+          <li>Вести журнал калорий в fatSecret</li>
+          <li>
+            Еженедельно выполнять замеры согласно протоколу gym-protocol (2).md
+          </li>
+        </ul>
+        <h2>Вы готовы?</h2>
+        <!-- confirmation buttons -->
+        <div>
+          <button id="close_challenge_btn">Закрыть</button>
+          <button id="confirm_challenge_btn">Да, начать!</button>
+        </div>
+      </dialog>
+
+      <article id="info_article">
+        <h1>Вы начали 8-недельный курс похудения!</h1>
+
+        <div id="countdown_timer">
+          <h2>До завершения курса осталось:</h2>
+          <p id="countdown"></p>
+        </div>
+
+        <h2>Продолжительность</h2>
+        <strong>Общая:</strong> 8 недель <br />
+        <strong>Интенсивный период:</strong> 6 недель <br />
+        <strong>Период отдыха:</strong> 2 недели <br />
+
+        <h2>Допустимое количество калорий и нутриентов</h2>
+        <strong>В день во время интенсивного периода:</strong> 1750 ккал <br />
+        <strong>В день во время периода отдыха:</strong> 2200 ккал <br />
+        <strong>Цель белка на день:</strong> 100 грамм <br />
+      </article>
 
       <button id="add_record">Добавить день</button>
 
@@ -113,35 +152,29 @@
             </div>
           </div>
 
-          <input
-            type="button"
-            required
-            id="add_photo_btn"
-            value="Добавить фото"
-          />
-
           <!-- camera roll access and photo selection -->
           <div id="camera">
             <img src="/img/camera.svg" alt="img6" />
-            <label for="cameraInput"
-              >Добавь фото, которое подходит под настроение сегодняшнего
-              дня:</label
-            >
-            <input
-              type="file"
-              id="cameraInput"
-              accept="image/*"
-              capture="environment"
-            />
-            <button id="close_photo_btn">Закрыть окно добавления фото</button>
+            <div class="camera_box">
+              <label for="cameraInput"
+                >Добавь фото, которое подходит под настроение сегодняшнего
+                дня:</label
+              >
+              <input
+                type="file"
+                id="cameraInput"
+                accept="image/*"
+                capture="environment"
+              />
 
-            <img id="preview" alt="выбранное фото будет тут" />
+              <img id="preview" alt="выбранное фото будет тут" />
+            </div>
           </div>
 
           <!-- confirmation buttons -->
           <div>
-            <button id="close_btn">Cancel</button>
-            <button id="confirm_btn">OK</button>
+            <button id="close_btn">Закрыть</button>
+            <button id="confirm_btn">Сохранить запись</button>
           </div>
         </form>
 
