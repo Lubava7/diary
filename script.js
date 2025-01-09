@@ -29,13 +29,6 @@ const showLogin = () => {
 const showApp = () => {
   loginContainer.style.display = 'none';
   appContainer.style.display = 'block';
-  addLogoutButton();
-};
-
-const addLogoutButton = () => {
-  if (!logout_btn) {
-    logout_btn.addEventListener('click', handleLogout);
-  }
 };
 
 loginBtn.addEventListener('click', () => {
@@ -56,6 +49,8 @@ const handleLogout = () => {
 
   showLogin();
 };
+
+logout_btn.addEventListener('click', handleLogout);
 
 window.addEventListener('load', checkLoginStatus);
 
