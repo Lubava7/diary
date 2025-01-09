@@ -61,6 +61,13 @@ const confirm_challenge_btn = document.getElementById('confirm_challenge_btn');
 const close_challenge_btn = document.getElementById('close_challenge_btn');
 const info_article = document.getElementById('info_article');
 
+const reset_LS = document.getElementById('reset_LS');
+
+reset_LS.addEventListener('click', () => {
+  localStorage.removeItem('challengeStartDate');
+  window.location.reload();
+});
+
 info_article.style.display = 'none';
 
 let dayCount;

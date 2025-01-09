@@ -213,7 +213,7 @@ h3 {
 .running_text {
   white-space: nowrap;
   display: inline-block;
-  animation: scrollText 15s linear infinite;
+  animation: scrollText 20s linear infinite;
 }
 
 @keyframes scrollText {
