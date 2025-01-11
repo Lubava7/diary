@@ -235,46 +235,138 @@ const saveRecord = (record) => {
   localStorage.setItem('records', JSON.stringify(records));
 };
 
-// display records
-const ul = document.getElementById('list');
-
-const displayRecords = () => {
-  const records = JSON.parse(localStorage.getItem('records') || '[]');
-  ul.innerHTML = '';
-
-  if (records.length === 0) {
-    ul.innerHTML = '<p>Пока нет ни одной записи</p>';
-    return;
-  }
-
-  records.forEach((record, index) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-    ${
-      record.photo
-        ? `<img src="${record.photo}" alt="День ${
-            records.length - index
-          } photo"/>`
-        : ''
-    }
-   <div class="card_content">
-    <h2>День ${records.length - index}</h2>
-    <p>
-    <strong>Дата:</strong> ${record.date} </br>
-    <strong>Калории:</strong> ${record.calories} </br>
-     <strong>Срывы:</strong> ${record.dietFailure}  </br>
-     <strong>Была в зале:</strong> ${record.gymDay}  </br>
-     <strong>Весь воркаут завершен:</strong> ${record.workoutCompleted}  </br>
-     <strong>Описание:</strong> ${record.description}  </br>
-     </p>
-   </div>
-    `;
-    ul.appendChild(li);
-  });
-};
-
 // confirm new record
-confirm_btn.addEventListener('click', (e) => {
+// confirm_btn.addEventListener('click', (e) => {
+//   const kcalAmount = document.getElementById('kcal_amount');
+//   const description = document.getElementById('description');
+
+//   if (!kcalAmount.value || !description.value) {
+//     alert('Please fill in all required fields.');
+//     return;
+//   }
+
+//   const calories = kcalAmount.value;
+
+//   const dietFailureInput = document.querySelector(
+//     'input[name="diet_failure"]:checked'
+//   );
+//   const gymDayInput = document.querySelector('input[name="gym_day"]:checked');
+//   const workoutCompletedInput = document.querySelector(
+//     'input[name="workout_check"]:checked'
+//   );
+
+//   const dietFailure = dietFailureInput
+//     ? document
+//         .querySelector(`label[for="${dietFailureInput.id}"]`)
+//         .textContent.trim()
+//     : '';
+//   const gymDay = gymDayInput
+//     ? document
+//         .querySelector(`label[for="${gymDayInput.id}"]`)
+//         .textContent.trim()
+//     : '';
+//   const workoutCompleted = workoutCompletedInput
+//     ? document
+//         .querySelector(`label[for="${workoutCompletedInput.id}"]`)
+//         .textContent.trim()
+//     : '';
+
+//   const file = cameraInput.files[0];
+//   let photoData = '';
+//   const currentDate = new Date().toLocaleDateString();
+
+//   if (file) {
+//     const reader = new FileReader();
+//     reader.onload = function (e) {
+//       photoData = e.target.result;
+//       const record = {
+//         date: currentDate,
+//         calories,
+//         dietFailure,
+//         gymDay,
+//         workoutCompleted,
+//         description: description.value,
+//         photo: photoData,
+//       };
+
+//       saveRecord(record);
+//       displayRecords();
+
+//       dialog.close();
+//       document.querySelector('form').reset();
+//     };
+//     reader.readAsDataURL(file);
+//   } else {
+//     const record = {
+//       date: currentDate,
+//       calories,
+//       dietFailure,
+//       gymDay,
+//       workoutCompleted,
+//       description: description.value,
+//       photo: '',
+//     };
+
+//     saveRecord(record);
+//     displayRecords();
+
+//     dialog.close();
+//     document.querySelector('form').reset();
+//   }
+// });
+
+// window.addEventListener('load', () => {
+//   displayRecords();
+// });
+
+// запрос к записям с бэкенда
+async function getData() {
+  try {
+    const response = await fetch('http://localhost:3000/records');
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error('Error:', err);
+    return [];
+  }
+}
+
+// добавление записей на бэк
+async function addRecord(recordData) {
+  try {
+    const response = await fetch('http://localhost:3000/records', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        photo: recordData.photo,
+
+        description: recordData.description,
+        is_gym_day: recordData.gymDay === 'Да',
+        is_failure: recordData.dietFailure === 'Да',
+        is_full_workout: recordData.workoutCompleted === 'Да',
+        date: new Date().toISOString(),
+        calorie_count: parseInt(recordData.calories),
+      }),
+    });
+
+    console.log('ответ', response);
+
+    if (!response.ok) {
+      throw new Error('Failed to add record');
+    }
+
+    const result = await response.json();
+    console.log('Record added successfully:', result);
+    return result;
+  } catch (error) {
+    console.error('Error adding record:', error);
+    throw error;
+  }
+}
+
+confirm_btn.addEventListener('click', async (e) => {
   const kcalAmount = document.getElementById('kcal_amount');
   const description = document.getElementById('description');
 
@@ -310,13 +402,38 @@ confirm_btn.addEventListener('click', (e) => {
     : '';
 
   const file = cameraInput.files[0];
-  let photoData = '';
   const currentDate = new Date().toLocaleDateString();
 
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      photoData = e.target.result;
+  try {
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = async function (e) {
+        const base64Image = e.target.result;
+
+        const record = {
+          date: currentDate,
+          calories: kcalAmount.value,
+          dietFailure,
+          gymDay,
+          workoutCompleted,
+          description: description.value,
+          photo: base64Image,
+        };
+
+        try {
+          await addRecord(record);
+          saveRecord(record);
+          displayRecords();
+          dialog.close();
+          document.querySelector('form').reset();
+          preview.src = '';
+        } catch (error) {
+          alert('Failed to save record. Please try again.');
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
       const record = {
         date: currentDate,
         calories,
@@ -324,34 +441,62 @@ confirm_btn.addEventListener('click', (e) => {
         gymDay,
         workoutCompleted,
         description: description.value,
-        photo: photoData,
+        photo: '',
       };
+
+      await addRecord(record);
 
       saveRecord(record);
       displayRecords();
 
       dialog.close();
       document.querySelector('form').reset();
-    };
-    reader.readAsDataURL(file);
-  } else {
-    const record = {
-      date: currentDate,
-      calories,
-      dietFailure,
-      gymDay,
-      workoutCompleted,
-      description: description.value,
-      photo: '',
-    };
-
-    saveRecord(record);
-    displayRecords();
-
-    dialog.close();
-    document.querySelector('form').reset();
+    }
+  } catch (error) {
+    console.error('Error saving record:', error);
+    alert('Failed to save record. Please try again.');
   }
 });
+
+// display records
+const ul = document.getElementById('list');
+
+const displayRecords = async () => {
+  // const records = JSON.parse(localStorage.getItem('records') || '[]');
+  const records = await getData();
+
+  ul.innerHTML = '';
+
+  if (records.length === 0) {
+    ul.innerHTML = '<p>Пока нет ни одной записи</p>';
+    return;
+  }
+
+  records.forEach((record, index) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+    ${
+      record.photo
+        ? `<img src="${record.photo}" alt="День ${
+            records.length - index
+          } photo"/>`
+        : ''
+    }
+   <div class="card_content">
+    <h2>День ${records.length - index}</h2>
+    <p>
+    <strong>Дата:</strong> ${record.date} </br>
+    <strong>Калории:</strong> ${record.calories} </br>
+     <strong>Срывы:</strong> ${record.dietFailure}  </br>
+     <strong>Была в зале:</strong> ${record.gymDay}  </br>
+     <strong>Весь воркаут завершен:</strong> ${record.workoutCompleted}  </br>
+     <strong>Описание:</strong> ${record.description}  </br>
+     </p>
+   </div>
+    `;
+    ul.appendChild(li);
+  });
+};
 
 window.addEventListener('load', () => {
   displayRecords();
