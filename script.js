@@ -474,12 +474,17 @@ const displayRecords = async () => {
 
   records.forEach((record, index) => {
     const li = document.createElement('li');
+
+    const photoSrc = record.photo?.data
+      ? `data:image/jpeg;base64,${Buffer.from(record.photo.data).toString(
+          'base64'
+        )}`
+      : record.photo;
+
     li.innerHTML = `
     ${
-      record.photo
-        ? `<img src="${record.photo}" alt="День ${
-            records.length - index
-          } photo"/>`
+      photoSrc
+        ? `<img src="${photoSrc}" alt="День ${records.length - index} photo"/>`
         : ''
     }
    <div class="card_content">
